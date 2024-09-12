@@ -1,79 +1,86 @@
-/* Global Styles */
+/* Apply Fira Mono from Google Fonts and fallback to DejaVu Sans Mono */
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Fira Mono', 'DejaVu Sans Mono', 'Consolas', 'Courier New', monospace;
+    background-color: #f5f5f5;
+    color: #333333;
     margin: 0;
+    padding: 40px 100px; /* Default padding for larger screens */
+    font-weight: medium;
+}
+
+/* Profile picture styling - Increased size with extra padding */
+.profile-pic {
+    display: block;
+    margin: 0 auto; /* Centers the image horizontally */
+    width: 250px; /* Adjust size as needed */
+    height: 250px; /* Ensure it's a square for circular effect */
+    border-radius: 50%; /* Makes the image circular */
+    padding-top: 15px; /* Increased top padding */
+    padding-bottom: 15px; /* Increased bottom padding */
+}
+
+/* Styling for the headings - Increased font size */
+h1 {
+    color: #000000;
+    font-size: 3em; /* Increased heading size */
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+/* Styling for paragraphs */
+p {
+    font-size: 1.1em;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+/* Styling for the unordered list */
+ul {
+    list-style-type: none;
     padding: 0;
-    text-align: center;
-    background-color: #f4f4f4;
-    color: #333;
 }
 
-/* Header Styles */
-header {
-    background-color: #4CAF50;
-    padding: 20px;
-    color: white;
+/* Styling for list items with dashes as bullets and matching paragraph font size */
+li::before {
+    content: "— "; /* Dash as bullet */
+    color: #000000;
+    font-weight: medium;
 }
 
-header h1 {
-    margin: 0;
-    font-size: 2.5em;
+/* Styling for list items */
+li {
+    font-size: 1.1em; /* Same size as paragraph */
+    line-height: 1.6; /* Same line height as paragraph */
+    margin-bottom: 10px;
 }
 
-header p {
-    margin: 10px 0 0;
-    font-size: 1.2em;
+/* Style links within the list */
+a {
+    color: #000000;
+    text-decoration: none;
+    font-weight: bold;
 }
 
-/* Section Styles */
-section {
-    padding: 40px;
+a:hover {
+    text-decoration: underline;
 }
 
-/* Project Grid Styles */
-.projects {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 20px;
-    max-width: 1200px;
-    margin: 0 auto;
+/* Add spacing between sections */
+#socials, #projects {
+    margin-top: 40px;
 }
 
-.project {
-    background-color: white;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    width: 300px;
-    transition: transform 0.2s ease-in-out;
-}
+/* Media Query for smaller devices */
+@media (max-width: 600px) {
+    body {
+        padding: 30px; /* Reduced padding for smaller screens */
+    }
 
-.project:hover {
-    transform: translateY(-10px);
-}
-
-.project h3 {
-    margin-top: 0;
-    color: #4CAF50;
-}
-
-.project p {
-    color: #666;
-}
-
-/* Footer Styles (Optional) */
-footer {
-    background-color: #333;
-    color: white;
-    padding: 10px;
-    position: fixed;
-    width: 100%;
-    bottom: 0;
-}
-
-footer p {
-    margin: 0;
-    font-size: 0.9em;
+    /* Styling for the headings - Increased font size */
+    h1 {
+        color: #000000;
+        font-size: 2em; /* Increased heading size */
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+    }
 }
