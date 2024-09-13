@@ -7,26 +7,67 @@
     <!-- Google Fonts: Fira Mono -->
     <link href="https://fonts.googleapis.com/css2?family=Fira+Mono&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <!-- Favicon -->
+    <link rel="icon" href="favicon.svg">
 </head>
+
 <body>
     <img src="profile.jpg" alt="Profile Picture" class="profile-pic">
     
-    <h1 id="about-me">About Me</h1>
-    <p>I’m currently studying Electrical and Electronics Engineering at Bilkent University and minoring in philosophy. </p>
+    <h1 id="about-me" class="scroll-text text-hidden">About Me</h1>
+    <p class="scroll-text text-hidden">I’m currently studying Electrical and Electronics Engineering at Bilkent University and minoring in philosophy. I graduated from METU Foundation School High School at Ankara. My passion for programming started during high school (10th grade) and even since I am learning new languages and tools. In addition to programming, 3D modeling and rendering is a huge ambition of mine. My journey with 3D modeling has started even earlier than programming and I post some of my work on <a href="https://github.com/tuna-alatan">Behance</a>. As hobby I love doing origami and playing basketball.</p>
 
-    <h1 id="socials">Socials</h1>
+    <h1 id="socials" class="scroll-text text-hidden">Socials</h1>
     <ul>
-        <li>GitHub 🔗 <a href="https://github.com/tuna-alatan">tuna-alatan</a></li>
-        <li>Behance 🔗 <a href="https://www.behance.net/tunaalatan">tunaalatan</a></li>
-        <li>YouTube 🔗 <a href="https://www.youtube.com/@tunaalatan35">Tuna Alatan</a></li>
-        <li>LinkedIn 🔗 <a href="https://www.linkedin.com/in/tuna-alatan-53a5b0239/">Tuna Alatan</a></li>
-        <li>Mail 🔗 tuna.alatan@gmail.com</li>
+        <li class="scroll-text text-hidden">GitHub 🔗 <a href="https://github.com/tuna-alatan">tuna-alatan</a></li>
+        <li class="scroll-text text-hidden">Behance 🔗 <a href="https://www.behance.net/tunaalatan">tunaalatan</a></li>
+        <li class="scroll-text text-hidden">YouTube 🔗 <a href="https://www.youtube.com/@tunaalatan35">Tuna Alatan</a></li>
+        <li class="scroll-text text-hidden">LinkedIn 🔗 <a href="https://www.linkedin.com/in/tuna-alatan/">Tuna Alatan</a></li>
+        <li class="scroll-text text-hidden">Mail 🔗 tuna.alatan@gmail.com</li>
     </ul>
 
-    <h1 id="projects">Projects</h1>
+    <h1 id="projects" class="scroll-text text-hidden">Projects</h1>
     <ul>
-        <li><a href="https://github.com/tuna-alatan/Color-Tracking-Camera">Color Tracking Camera Using VHDL - My final project of the course EE 102 @ Bilkent University</a></li>
-        <li>Ray Tracing engine using C++ - A personal on-going project to better understand rendering engines.</li>
+        <li class="scroll-text text-hidden"><a href="https://github.com/tuna-alatan/Color-Tracking-Camera">Color Tracking Camera Using VHDL - My final project of the course EE 102 @ Bilkent University</a></li>
+        <li class="scroll-text text-hidden">Ray Tracing engine using C++ - A personal on-going project to better understand rendering engines.</li>
     </ul>
+
 </body>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const elements = document.querySelectorAll('.scroll-text');
+        let lastScrollTop = 0; // Track the last scroll position
+
+        function checkScroll() {
+            const triggerPoint = window.innerHeight * 0.9; // Trigger when element is 90% down the viewport
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+            elements.forEach(el => {
+                const rect = el.getBoundingClientRect();
+
+                if (rect.top < triggerPoint) {
+                    if (scrollTop > lastScrollTop) {
+                        // Scrolling down: swipe in from the left
+                        el.classList.add('text-visible');
+                        el.classList.remove('text-hidden', 'text-hidden-up');
+                    }
+                } else {
+                    if (scrollTop < lastScrollTop) {
+                        // Scrolling up: swipe out to the left
+                        el.classList.add('text-hidden-up');
+                        el.classList.remove('text-visible');
+                    }
+                }
+            });
+
+            lastScrollTop = scrollTop <= 0 ? 0 : scrollTop; // Ensure lastScrollTop doesn't go negative
+        }
+
+        window.addEventListener('scroll', checkScroll);
+        checkScroll(); // Initial check when page loads
+    });
+</script>
+
+
 </html>
