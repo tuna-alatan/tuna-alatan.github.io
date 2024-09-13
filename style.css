@@ -4,7 +4,7 @@ body {
     background-color: #f5f5f5;
     color: #333333;
     margin: 0;
-    padding: 40px 100px; /* Default padding for larger screens */
+    padding: 30px 120px 120px 60px; /* Default padding for larger screens */
     font-weight: medium;
 }
 
@@ -84,3 +84,50 @@ a:hover {
         margin-bottom: 20px;
     }
 }
+
+/* Swipe-in from the left animation */
+@keyframes swipeLeft {
+    0% {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+    100% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Swipe-out to the left animation (when scrolling up) */
+@keyframes swipeOutLeft {
+    0% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    100% {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+}
+
+/* Initial hidden state for text elements */
+.text-hidden {
+    opacity: 0;
+    transform: translateX(-100%);
+    visibility: hidden;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+/* Swipe-in visible state */
+.text-visible {
+    visibility: visible;
+    animation: swipeLeft 0.7s ease forwards;
+}
+
+/* Swipe-out when scrolling up */
+.text-hidden-up {
+    visibility: visible;
+    animation: swipeOutLeft 0.7s ease forwards;
+}
+
+
+
