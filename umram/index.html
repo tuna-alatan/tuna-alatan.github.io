@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Generative Models for Accelerated MRI Reconstruction — Research Notes | M. Tuna Alatan</title>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600;700&family=Noto+Serif:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../assets/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$', right: '$', display: false},
+        {left: '\\\\(', right: '\\\\)', display: false},
+        {left: '\\\\[', right: '\\\\]', display: true}
+      ],
+      throwOnError: false
+    });"></script>
+  <style>
+    :root {
+      --bg: #fcfcfc;
+      --bg-2: #f0f0f0;
+      --ink: #1a1a1a;
+      --muted: #666;
+      --line: #e0e0e0;
+      --accent: #1e3a5f;
+      --accent-2: #b35c2a;
+      --green: #2f5d45;
+      --purple: #4a3a63;
+      --paper: #ffffff;
+      --code-bg: #1a2330;
+      --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      --max: 820px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: #fcfcfc;
+      font-family: "Noto Serif", Georgia, "Times New Roman", serif;
+      font-size: 17.5px;
+      line-height: 1.7;
+    }
+
+    .wrap { max-width: var(--max); margin: 0 auto; padding: 0 1.25rem 5rem; margin-top: 1.5rem; }
+
+    .hero {
+      padding: 3rem 0 1.5rem;
+      border-bottom: 1px solid var(--line);
+      margin-bottom: 2.5rem;
+    }
+    .eyebrow {
+      font-size: 0.78rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      font-weight: 600;
+      margin: 0 0 0.85rem;
+    }
+    h1 {
+      font-family: "Noto Serif JP", "Playfair Display", Georgia, "Times New Roman", serif;
+      font-size: clamp(2rem, 4.5vw, 2.85rem);
+      line-height: 1.15;
+      font-weight: 700;
+      margin: 0 0 1rem;
+      letter-spacing: -0.01em;
+    }
+    .lede {
+      font-size: 1.12rem;
+      color: var(--muted);
+      max-width: 42rem;
+      margin: 0 0 1.5rem;
+    }
+    .meta {
+      display: flex; flex-wrap: wrap; gap: 0.75rem 1.25rem;
+      font-size: 0.9rem; color: var(--muted);
+    }
+    .meta strong { color: var(--ink); font-weight: 600; }
+
+    nav.toc {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      padding: 0.8rem 1.4rem;
+      margin: 0 0 2.75rem;
+      position: sticky;
+      top: 4rem;
+      z-index: 50;
+      max-height: calc(100vh - 5rem);
+      overflow-y: auto;
+      cursor: pointer;
+      user-select: none;
+    }
+    nav.toc:hover { border-color: var(--accent); }
+    nav.toc h2 {
+      font-size: 0.78rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin: 0;
+      color: var(--accent);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    nav.toc h2::after {
+      content: '\25BC';
+      font-size: 0.6rem;
+      transition: transform 0.2s;
+    }
+    nav.toc.toc-open h2::after {
+      transform: rotate(180deg);
+    }
+    nav.toc ol {
+      margin: 0.75rem 0 0;
+      padding-left: 1.2rem;
+      columns: 1;
+      display: none;
+    }
+    nav.toc.toc-open ol {
+      display: block;
+    }
+    @media (min-width: 640px) {
+      nav.toc.toc-open ol { columns: 2; column-gap: 2rem; }
+    }
+    nav.toc li { margin: 0.25rem 0; break-inside: avoid; }
+    nav.toc a {
+      color: var(--ink);
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+    }
+    nav.toc a:hover { border-bottom-color: var(--accent); color: var(--accent); }
+
+    h2 {
+      font-family: "Noto Serif JP", "Playfair Display", Georgia, "Times New Roman", serif;
+      font-size: 1.65rem;
+      font-weight: 700;
+      margin: 1.5rem 0 0.75rem;
+      letter-spacing: -0.01em;
+    }
+    h3 {
+      font-family: "Noto Serif JP", "Playfair Display", Georgia, "Times New Roman", serif;
+      font-size: 1.3rem;
+      margin: 1.25rem 0 0.5rem;
+      color: var(--ink);
+      font-weight: 600;
+    }
+    h4 {
+      font-size: 1rem;
+      margin: 1rem 0 0.4rem;
+      font-weight: 600;
+    }
+    p { margin: 0.85rem 0; }
+    a { color: var(--accent); }
+    strong { font-weight: 600; }
+
+    .figure {
+      margin: 1.25rem 0;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      padding: 0.85rem;
+      box-shadow: var(--shadow);
+    }
+    .figure img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+    .figure.grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+    }
+    .figure.grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.6rem;
+    }
+    @media (max-width: 700px) {
+      .figure.grid-2, .figure.grid-3 { grid-template-columns: 1fr; }
+    }
+    figcaption {
+      font-size: 0.88rem;
+      color: var(--muted);
+      margin-top: 0.7rem;
+      padding: 0 0.25rem 0.15rem;
+      line-height: 1.45;
+    }
+
+    .callout {
+      border-left: 3px solid var(--accent);
+      background: rgba(31, 77, 92, 0.06);
+      padding: 0.9rem 1.1rem;
+      margin: 1.4rem 0;
+    }
+    .callout.warn {
+      border-left-color: var(--accent-2);
+      background: rgba(138, 75, 47, 0.07);
+    }
+    .callout.next {
+      border-left-color: var(--purple);
+      background: rgba(74, 58, 99, 0.07);
+    }
+    .callout p:first-child { margin-top: 0; }
+    .callout p:last-child { margin-bottom: 0; }
+
+    .katex-display {
+      margin: 1.1rem 0 !important;
+      overflow-x: auto;
+      overflow-y: hidden;
+      padding: 0.15rem 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.92rem;
+      margin: 1.2rem 0 1.6rem;
+      background: var(--paper);
+    }
+    th, td {
+      border: 1px solid var(--line);
+      padding: 0.55rem 0.7rem;
+      text-align: left;
+      vertical-align: top;
+    }
+    th {
+      background: var(--bg-2);
+      font-weight: 600;
+      font-size: 0.82rem;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+    }
+
+    code, .mono {
+      font-family: "IBM Plex Mono", ui-monospace, monospace;
+      font-size: 0.88em;
+    }
+    pre {
+      background: var(--code-bg);
+      color: #e8e6e1;
+      padding: 1rem 1.1rem;
+      overflow-x: auto;
+      font-family: "IBM Plex Mono", ui-monospace, monospace;
+      font-size: 0.82rem;
+      line-height: 1.55;
+      margin: 1.2rem 0;
+    }
+
+    ul, ol { margin: 0.7rem 0 1rem; padding-left: 1.35rem; }
+    li { margin: 0.35rem 0; }
+
+    .path-strip {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.55rem;
+      margin: 1.5rem 0 2rem;
+    }
+    @media (max-width: 800px) {
+      .path-strip { grid-template-columns: 1fr 1fr; }
+    }
+    .path-item {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      padding: 0.85rem 0.9rem;
+      min-height: 5.5rem;
+    }
+    .path-item .n {
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.35rem;
+    }
+    .path-item .t {
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+    .path-item .d {
+      font-size: 0.88rem;
+      color: var(--muted);
+      line-height: 1.35;
+    }
+
+    footer {
+      margin-top: 3.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .dir-map {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 0.82rem;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      padding: 1rem 1.1rem;
+      line-height: 1.55;
+      overflow-x: auto;
+    }
+    .dir-map .c { color: var(--muted); }
+  </style>
+</head>
+<body>
+  <nav class="site-nav" aria-label="Primary navigation">
+    <div class="nav-inner">
+      <a href="../index.html" class="nav-logo">M. Tuna Alatan</a>
+      <div class="nav-links">
+        <a href="../index.html#about" class="nav-link">About</a>
+        <a href="../index.html#research" class="nav-link">Research</a>
+        <a href="../blog.html" class="nav-link">Notes</a>
+        <a href="../resume.pdf" class="nav-link" target="_blank" rel="noopener noreferrer">CV</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="wrap">
+    <header class="hero">
+      <p class="eyebrow">Research notes · Inverse problems · Generative imaging</p>
+      <p style="margin-bottom: 0.5rem;"><a href="../blog.html" style="font-size: 0.9rem; color: #888;">&larr; Back to Research Blog</a></p>
+      <h1>Generative Models for Accelerated MRI Reconstruction</h1>
+      <p class="lede">
+        A detailed walkthrough of the research path from multi-step diffusion and adversarial baselines,
+        through physics-based unrolled networks, to residual-space drifting models aimed at
+        <em>single-step</em> inference with diffusion-like generative fidelity — and the ongoing
+        effort to fuse unrolled architectures with the drift paradigm.
+      </p>
+      <div class="meta">
+        <span><strong>Focus</strong> Multicoil MRI · M4Raw / FastMRI-style pipelines</span>
+        <span><strong>Goal</strong> One forward pass, generative texture, data consistency</span>
+      </div>
+    </header>
+
+    <nav class="toc" aria-label="Table of contents">
+      <h2>Contents</h2>
+      <ol>
+        <li><a href="#motivation">Motivation &amp; problem setup</a></li>
+        <li><a href="#inverse">MRI as an inverse problem</a></li>
+        <li><a href="#bayes">Bayesian view &amp; generative priors</a></li>
+        <li><a href="#ddpm">Baseline I — DDPM</a></li>
+        <li><a href="#rgan">Baseline II — rGAN</a></li>
+        <li><a href="#unrolled">Unrolled networks — RAM &amp; MoDL</a></li>
+        <li><a href="#tradeoff">The fidelity–latency trade-off</a></li>
+        <li><a href="#drift">The drift paradigm</a></li>
+        <li><a href="#driftram">DriftRAM for MRI</a></li>
+        <li><a href="#combine">Combining unrolled nets with drift</a></li>
+        <li><a href="#dirs">Directory map of the codebase</a></li>
+        <li><a href="#outlook">Outlook</a></li>
+        <li><a href="#refs">Selected references</a></li>
+      </ol>
+    </nav>
+
+    <section id="motivation">
+      <h2>1. Motivation &amp; problem setup</h2>
+      <p>
+        MRI acquisition is fundamentally limited by the need to traverse $k$-space.
+        Accelerating scans by skipping phase-encode lines yields undersampled measurements
+        $y$ and an ill-posed recovery problem for the complex image $x$. Classical compressed-sensing
+        methods rely on handcrafted sparsity; deep learning replaces those priors with data-driven ones.
+      </p>
+      <p>
+        Within deep MRI reconstruction, two families dominate practice:
+      </p>
+      <ul>
+        <li><strong>Physics-aware unrolled / proximal networks</strong> (MoDL, VarNet, RAM, …) —
+          fast at inference, strong data consistency, but often oversmooth texture when trained with $\ell_1/\ell_2$ losses.</li>
+        <li><strong>Generative models</strong> (GANs, DDPMs, score-based / flow models) —
+          richer posterior samples and more realistic tissue texture, but multi-step sampling is slow,
+          and enforcing measurement consistency can be nontrivial.</li>
+      </ul>
+      <p>
+        The research program documented here is an attempt to keep the <em>generative</em> quality of diffusion
+        while approaching the <em>latency</em> of a single network evaluation — using residual-driven drifting
+        (RDDM / DriftRAM), and subsequently asking whether unrolled physics modules should sit inside that
+        generative loop.
+      </p>
+
+      <figure class="figure">
+        <img src="assets/mri_overview.png" alt="Fully sampled and undersampled MRI in image and k-space domains" />
+        <figcaption>
+          Figure 1. Real M4Raw T2 slice (<span class="mono">2022061206_T203.h5:slice9</span>, val split),
+          shown with coil root-sum-of-squares (RSS) for display.
+          Top: fully sampled magnitude, zero-filled reconstruction from undersampled $k$-space ($R\!=\!4$),
+          and the aliasing residual. Bottom: log-magnitude coil-RSS $k$-space (full / undersampled) and the Cartesian mask.
+        </figcaption>
+      </figure>
+    </section>
+
+    <section id="inverse">
+      <h2>2. MRI as an inverse problem</h2>
+
+      <h3>2.1 Forward model</h3>
+      <p>
+        In multicoil MRI with coil sensitivity maps $S_c$ and a binary (or soft) sampling mask $M$,
+        the linear forward operator $A$ maps a complex image $x \in \mathbb{C}^{H\times W}$ to
+        undersampled multi-coil $k$-space:
+      </p>
+      $$
+        y = A x + \varepsilon,
+        \qquad
+        (A x)_c = M\,\mathcal{F}\,(S_c \odot x),
+        \quad c = 1,\ldots,C.
+      $$
+      <p>
+        Here $\mathcal{F}$ is the (centered, orthonormal) 2D Fourier transform, $\odot$ is pointwise
+        multiplication, and $\varepsilon$ models thermal / acquisition noise. The adjoint $A^H$
+        (often written $A^\top$ when working with real/imag stacked channels) produces the
+        coil-combined zero-filled image
+        $x_{\mathrm{us}} = A^H y$.
+      </p>
+
+      <figure class="figure">
+        <img src="assets/forward_model.png" alt="Forward measurement chain x to FFT to mask to y" />
+        <figcaption>Figure 2. Single-coil schematic of the measurement chain $y = M\mathcal{F}x + \varepsilon = Ax + \varepsilon$. Multicoil MRI inserts sensitivity maps before the FFT.</figcaption>
+      </figure>
+
+      <figure class="figure grid-3">
+        <img src="assets/image_fs.png" alt="Fully sampled image" />
+        <img src="assets/image_us.png" alt="Zero-filled undersampled reconstruction" />
+        <img src="assets/aliasing.png" alt="Aliasing residual map" />
+        <figcaption style="grid-column: 1 / -1;">
+          Figure 3. M4Raw image-domain view (coil RSS): ground-truth $x$, zero-filled $A^H y$, and residual aliasing.
+          The null-space of $A$ is exactly where aliasing energy lives — and where generative models must invent plausible content.
+        </figcaption>
+      </figure>
+
+      <figure class="figure grid-3">
+        <img src="assets/kspace_fs.png" alt="Fully sampled k-space" />
+        <img src="assets/kspace_us.png" alt="Undersampled k-space" />
+        <img src="assets/mask.png" alt="Cartesian sampling mask" />
+        <figcaption style="grid-column: 1 / -1;">
+          Figure 4. M4Raw $k$-space view (coil RSS): dense coverage vs. skipped phase-encode lines under a Cartesian mask with ACS region.
+        </figcaption>
+      </figure>
+
+      <figure class="figure">
+        <img src="assets/rss_vs_sense.png" alt="RSS versus ESPIRiT SENSE fully sampled and zero-filled M4Raw images" />
+        <figcaption>
+          Figure 5. Same M4Raw slice under two coil-combination displays. Training targets in DriftRAM / MoDL use
+          ESPIRiT SENSE adjoint images; RSS is shown in overview figures because it preserves a fuller FOV
+          for pedagogy. Both ZF panels illustrate $R\!=\!4$ aliasing.
+        </figcaption>
+      </figure>
+
+      <h3>2.2 Range–nullspace decomposition</h3>
+      <p>
+        For a linear operator with a (generalized) left inverse built from $A^H$, any candidate reconstruction
+        can be split into a data-consistent part and a null-space part:
+      </p>
+      $$
+        x = A^\dagger y + (I - A^\dagger A)\, x
+        \;=\;
+        x_{\mathrm{us}} + P_{\mathcal{N}(A)}\, x,
+      $$
+      <p>
+        where $P_{\mathcal{N}(A)} = I - A^\dagger A$ projects onto the null space of $A$
+        (in practice often $I - A^H A$ after appropriate normalization / soft projections).
+        Measured Fourier coefficients fix the range component; everything the network “hallucinates”
+        to remove aliasing must live in $\mathcal{N}(A)$ if hard data consistency is required.
+      </p>
+      <div class="callout">
+        <p>
+          <strong>Design consequence.</strong>
+          Generative MRI methods that predict a residual in null space —
+          $x_{\mathrm{recon}} = x_{\mathrm{us}} + P_{\mathcal{N}(A)}\, G(\cdot)$ —
+          automatically preserve acquired $k$-space lines while still allowing rich texture synthesis.
+          This is the structural prior used in DriftRAM.
+        </p>
+      </div>
+
+      <h3>2.3 Classical variational form</h3>
+      <p>
+        The standard regularized least-squares problem is
+      </p>
+      $$
+        \hat{x}
+        =
+        \arg\min_{x}
+        \frac{1}{2}\|Ax - y\|_2^2 + \lambda\,\mathcal{R}(x).
+      $$
+      <p>
+        Handcrafted $\mathcal{R}$ (TV, wavelets) gave way to learned denoisers / proximal maps
+        plugged into iterative schemes (PnP, RED, ADMM, proximal gradient). Unrolled networks
+        freeze a small number of such iterations and train end-to-end.
+      </p>
+    </section>
+
+    <section id="bayes">
+      <h2>3. Bayesian view &amp; generative priors</h2>
+      <p>
+        From a Bayesian perspective we want samples (or a point estimate) from the posterior
+      </p>
+      $$
+        p(x\mid y) \propto p(y\mid x)\, p(x),
+      $$
+      <p>
+        with Gaussian likelihood $p(y\mid x) = \mathcal{N}(y; Ax, \sigma^2 I)$ and a prior $p(x)$
+        over natural MR images. Generative models approximate $p(x)$ (or a residual distribution)
+        and either:
+      </p>
+      <ul>
+        <li>sample unconditionally then project / optimize for consistency;</li>
+        <li>train conditionally $p(x\mid x_{\mathrm{us}})$ or $p(x\mid y)$;</li>
+        <li>or combine score estimates with likelihood gradients (DPS, score-based MRI, …).</li>
+      </ul>
+      <p>
+        Pixelwise $\ell_1/\ell_2$ regression toward $x_{\mathrm{fs}}$ estimates the posterior mean
+        under common assumptions — which is PSNR-friendly but suppresses high-frequency texture
+        (regression to the mean). Adversarial and diffusion objectives target richer distributional
+        match, which is why they look more “MRI-like” even at similar PSNR.
+      </p>
+    </section>
+
+    <section id="ddpm">
+      <h2>4. Baseline I — Denoising Diffusion Probabilistic Models (DDPM)</h2>
+
+      <h3>4.1 Theory</h3>
+      <p>
+        A DDPM defines a fixed forward noising process that gradually destroys an image $x_0$:
+      </p>
+      $$
+        q(x_t\mid x_{t-1}) = \mathcal{N}\!\big(x_t; \sqrt{1-\beta_t}\, x_{t-1},\, \beta_t I\big),
+      $$
+      <p>
+        with schedule $\{\beta_t\}_{t=1}^{T}$. The marginal is
+        $q(x_t\mid x_0) = \mathcal{N}(x_t; \sqrt{\bar\alpha_t}\, x_0,\, (1-\bar\alpha_t)I)$
+        where $\alpha_t = 1-\beta_t$ and $\bar\alpha_t = \prod_{s\le t}\alpha_s$.
+        A neural network $\epsilon_\theta(x_t, t)$ (or an $x_0$-prediction network) is trained to reverse the process:
+      </p>
+      $$
+        \mathcal{L}_{\mathrm{simple}}
+        =
+        \mathbb{E}_{t,x_0,\epsilon}
+        \big\|
+          \epsilon - \epsilon_\theta\big(\sqrt{\bar\alpha_t}\, x_0 + \sqrt{1-\bar\alpha_t}\,\epsilon,\, t\big)
+        \big\|_2^2.
+      $$
+      <p>
+        Sampling starts from $x_T \sim \mathcal{N}(0,I)$ and iteratively applies the learned reverse transitions —
+        typically hundreds of network evaluations. For MRI, the codebase
+        <span class="mono">Models/DDPM_xstart_multicoil</span> and the M4Raw fine-tuning scripts under
+        <span class="mono">m4_cm/</span> use an <em>$x_0$-prediction</em> parameterization on complex /
+        multicoil data, with inference-time adaptations for FastMRI / M4Raw masks.
+      </p>
+
+      <h3>4.2 Why DDPM as a baseline?</h3>
+      <ul>
+        <li>Strong empirical fidelity and sample diversity among generative MRI priors.</li>
+        <li>Clear probabilistic semantics: approximate ancestral sampling from a learned prior / posterior.</li>
+        <li>Sets the <em>quality target</em> for later one-step methods — if DriftRAM matches DDPM texture
+            at $1/T$ the compute, the research goal is met.</li>
+      </ul>
+      <div class="callout warn">
+        <p>
+          <strong>Cost.</strong>
+          Multi-step reverse diffusion is the main clinical blocker. Even with DDIM / consistency distillation,
+          bridging to a single NFE (number of function evaluations) without collapsing fine structure is hard —
+          which motivates residual drifting rather than naive regression distillation alone.
+        </p>
+      </div>
+    </section>
+
+    <section id="rgan">
+      <h2>5. Baseline II — Residual GAN (rGAN / pix2pix-style)</h2>
+
+      <h3>5.1 Theory</h3>
+      <p>
+        Conditional GANs learn a generator $G$ and discriminator $D$ for paired data $(x_{\mathrm{us}}, x_{\mathrm{fs}})$.
+        A common MRI instantiation (pix2pix / residual GAN) minimizes a mix of adversarial and reconstruction losses:
+      </p>
+      $$
+        \mathcal{L}_{G}
+        =
+        \mathbb{E}\big[-\log D(x_{\mathrm{us}}, G(x_{\mathrm{us}}))\big]
+        +
+        \lambda_{\ell_1}\,
+        \|G(x_{\mathrm{us}}) - x_{\mathrm{fs}}\|_1
+        +
+        \lambda_{\mathrm{perc}}\,
+        \mathcal{L}_{\mathrm{VGG}}\big(G(x_{\mathrm{us}}), x_{\mathrm{fs}}\big).
+      $$
+      <p>
+        The discriminator distinguishes real pairs $(x_{\mathrm{us}}, x_{\mathrm{fs}})$ from fake pairs
+        $(x_{\mathrm{us}}, G(x_{\mathrm{us}}))$. Residual formulations often predict an additive correction
+        on top of $x_{\mathrm{us}}$, which is natural for aliasing removal.
+      </p>
+      <p>
+        In this project, <span class="mono">Models/rGAN</span> provides the pix2pix / CycleGAN-family training stack,
+        extended with M4Raw caching (<span class="mono">m4raw_cache</span>), FastMRI-style masks, and optional
+        VGG perceptual losses — used as a <em>fast generative baseline</em> that already runs in one forward pass.
+      </p>
+
+      <h3>5.2 Strengths and failure modes</h3>
+      <table>
+        <thead>
+          <tr><th>Aspect</th><th>Observation</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Latency</td><td>Single NFE — clinically attractive.</td></tr>
+          <tr><td>Texture</td><td>Can look sharp, but may invent adversarial high-frequency artifacts.</td></tr>
+          <tr><td>Training</td><td>Unstable; sensitive to $\lambda_{\ell_1}$, perceptual weights, and mask distribution.</td></tr>
+          <tr><td>Consistency</td><td>Not automatically data-consistent unless an explicit DC projection is added.</td></tr>
+          <tr><td>Role here</td><td>Lower bound on what “one-step generative” can look like before drift training.</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="unrolled">
+      <h2>6. Unrolled networks — RAM &amp; MoDL</h2>
+      <p>
+        After generative baselines, the next question was: <em>how good are dedicated physics-based reconstructors
+        when we do not ask them to be generative?</em> Two architectures were trained / evaluated as representatives
+        of the unrolled / proximal family.
+      </p>
+
+      <h3>6.1 MoDL — model-based deep learning</h3>
+      <p>
+        MoDL (Aggarwal et al., 2018) unrolls alternating denoising and conjugate-gradient data-consistency steps.
+        With a CNN denoiser $\mathcal{D}_\theta$ shared across $K$ cascades, each iteration solves
+      </p>
+      $$
+        z^{(k)} = \mathcal{D}_\theta\!\big(x^{(k)}\big),
+        \qquad
+        x^{(k+1)}
+        =
+        \arg\min_{x}
+        \|Ax - y\|_2^2 + \lambda\,\|x - z^{(k)}\|_2^2.
+      $$
+      <p>
+        The quadratic subproblem is solved with CG using the normal equations
+      </p>
+      $$
+        \big(A^H A + \lambda I\big)\, x = A^H y + \lambda\, z^{(k)}.
+      $$
+      <p>
+        In <span class="mono">Models/MoDL_PyTorch</span>, the CNN residual denoiser operates on real/imag channels,
+        coil sensitivities and masks enter <span class="mono">myAtA</span>, and $K\in\{1,10\}$ configs mirror the
+        original paper’s warm-start practice (train $K\!=\!1$, then $K\!=\!10$). M4Raw-specific FFT conventions
+        (centered orthonormal) were aligned with the rest of the pipeline.
+      </p>
+      <div class="callout">
+        <p>
+          <strong>Takeaway from MoDL.</strong>
+          Explicit CG data consistency yields excellent numerical fidelity to acquired lines and competitive PSNR/SSIM.
+          With pixel losses, reconstructions remain somewhat smooth — confirming the familiar
+          “unrolled = accurate but less generative” regime.
+        </p>
+      </div>
+
+      <h3>6.2 RAM — Reconstruct Anything Model</h3>
+      <p>
+        RAM (Terris et al., 2025) is a non-iterative foundational model for computational imaging:
+        a proximal estimation module, Krylov subspace module (KSM) injecting physics via learned combinations
+        of gradient / adjoint terms, multiscale operator conditioning, and noise conditioning.
+        Unlike MoDL’s deep unrolling of many CG steps, RAM aims for a <em>single</em> powerful physics-aware forward pass
+        that still queries $A$ and $A^H$ inside the network.
+      </p>
+      <p>
+        In this project, <span class="mono">Models/ram</span> was used both as a standalone MRI reconstructor
+        (M4Raw training / evaluation scripts) and later as architectural DNA for generative variants
+        (GenRAM backbone ideas inside early DriftRAM designs before the DiT-B swap).
+      </p>
+
+      <h3>6.3 What unrolled nets taught us</h3>
+      <ul>
+        <li>Physics modules are the right place to enforce consistency; do not rely on the generator alone.</li>
+        <li>One / few NFEs is achievable <em>without</em> diffusion — so latency is not the hard part.</li>
+        <li>Distributional fidelity (texture, noise grain, fine sulci) is the missing piece relative to DDPM.</li>
+      </ul>
+    </section>
+
+    <section id="tradeoff">
+      <h2>7. The fidelity–latency trade-off</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Method</th>
+            <th>Typical NFE</th>
+            <th>Physics / DC</th>
+            <th>Generative texture</th>
+            <th>Role in this work</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>DDPM ($x_0$-pred.)</td>
+            <td>$\sim\!10^2$</td>
+            <td>Optional at sample time</td>
+            <td>High</td>
+            <td>Fidelity ceiling</td>
+          </tr>
+          <tr>
+            <td>rGAN</td>
+            <td>$1$</td>
+            <td>Weak / optional</td>
+            <td>Medium–high (artifact risk)</td>
+            <td>One-step generative baseline</td>
+          </tr>
+          <tr>
+            <td>MoDL ($K$ cascades)</td>
+            <td>$K$ denoise + CG</td>
+            <td>Strong (CG)</td>
+            <td>Low–medium</td>
+            <td>Physics baseline</td>
+          </tr>
+          <tr>
+            <td>RAM</td>
+            <td>$1$ (with $A,A^H$ calls)</td>
+            <td>Strong (KSM / proximal)</td>
+            <td>Low–medium</td>
+            <td>Non-iterative physics baseline</td>
+          </tr>
+          <tr>
+            <td>DriftRAM</td>
+            <td>$1$</td>
+            <td>Null-space residual</td>
+            <td>Target: DDPM-like</td>
+            <td>Current generative one-step approach</td>
+          </tr>
+          <tr>
+            <td>Unrolled + Drift</td>
+            <td>Few</td>
+            <td>CG / KSM + drift</td>
+            <td>Target: DDPM-like</td>
+            <td>Work in progress</td>
+          </tr>
+        </tbody>
+      </table>
+      <p>
+        The research hypothesis: <strong>residual-space drifting</strong> can move a one-step generator’s
+        output distribution toward the real residual distribution during training, so inference stays
+        single-shot while matching multi-step diffusion fidelity more closely than $\ell_1$ or GAN alone.
+      </p>
+    </section>
+
+    <section id="drift">
+      <h2>8. The drift paradigm</h2>
+
+      <h3>8.1 Residual-driven drifting (RDDM)</h3>
+      <p>
+        RDDM (Wang, Lyu, Wang — residual-driven drifting for LDCT) reframes generation around
+        <em>residuals</em>. Let $r^{+}$ denote real residuals (e.g. clean − noisy in CT, or
+        fully sampled − undersampled components in MRI) and $r^{g}$ the residuals currently produced
+        by the generator. Instead of only regressing $r^{g}\!\to\! r^{+}$ pixelwise, RDDM constructs
+        a <strong>drifting field</strong> in residual feature space that points generated samples
+        toward the real residual cloud, using other batch samples as negatives.
+      </p>
+
+      <h3>8.2 Drift vector (mathematical form)</h3>
+      <p>
+        Flatten each residual map in a batch into features and $\ell_2$-normalize / rescale them.
+        For temperature $\tau &gt; 0$, build an affinity kernel between generated features $g_i$ and
+        the concatenated negative/positive bank $z_j$:
+      </p>
+      $$
+        K_{ij} = \exp\!\big(-\|g_i - z_j\|_2 / \tau\big),
+        \qquad
+        \tilde K_{ij}
+        =
+        \frac{K_{ij}}{\sqrt{\big(\sum_{j'} K_{ij'}\big)\big(\sum_{i'} K_{i'j}\big)}}.
+      $$
+      <p>
+        Split $\tilde K$ into negative and positive blocks. The drift for generated sample $i$ is a
+        difference of kernel-weighted residual vectors:
+      </p>
+      $$
+        d_i
+        =
+        \underbrace{\big(\tilde K^{+}_{i\cdot}\, \mathbf{1}^\top \tilde K^{-}_{i\cdot}\big)\, R^{+}}_{\text{pull to real residuals}}
+        -
+        \underbrace{\big(\tilde K^{-}_{i\cdot}\, \mathbf{1}^\top \tilde K^{+}_{i\cdot}\big)\, R^{g}}_{\text{push from generated cloud}}.
+      $$
+      <p>
+        Training then uses a stop-gradient target $r^{g} + \gamma\, d$ and MSE:
+      </p>
+      $$
+        \mathcal{L}_{\mathrm{drift}}
+        =
+        \sum_{\tau \in \mathcal{T}}
+        \big\|
+          r^{g} - \mathrm{sg}\big(r^{g} + \gamma\, d^{(\tau)}\big)
+        \big\|_2^2,
+      $$
+      <p>
+        optionally plus a small $\lambda_{\ell_1}\|r^{g} - r^{+}\|_1$ for smoother variants.
+        Multiple temperatures $\mathcal{T}$ (e.g. $\{0.2,1.0\}$ or $\{1.0,1.5\}$) probe local vs. broader
+        geometry of the residual distribution — RDDM-Fine / Balanced / Smooth in the LDCT paper.
+      </p>
+
+      <div class="callout">
+        <p>
+          <strong>Why this can beat pure $\ell_1$.</strong>
+          Pixel losses encourage the posterior mean. Drift losses encourage movement of the
+          <em>empirical generated measure</em> toward the empirical real residual measure in a
+          kernel-weighted sense, preserving high-frequency modes that mean-regression would kill.
+          At inference, only one generator evaluation is needed — the multi-step “evolution”
+          is baked into training dynamics, not into sampling.
+        </p>
+      </div>
+
+      <h3>8.3 Connection to diffusion (intuition)</h3>
+      <p>
+        Diffusion transports noise $\to$ data along a probability-flow / SDE path with many NFEs.
+        Drifting instead estimates, in batch residual space, an instantaneous transport direction
+        from fake residuals toward real ones and regresses onto that direction. It is not the same
+        as score matching, but shares the spirit of learning a field that reshapes distributions —
+        compressed into a supervised one-step network.
+      </p>
+    </section>
+
+    <section id="driftram">
+      <h2>9. DriftRAM for accelerated MRI</h2>
+      <p>
+        <span class="mono">Models/drift_ram</span> adapts RDDM-style residual drifting to multicoil MRI
+        with explicit null-space structure (and later a DiT-B backbone).
+      </p>
+
+      <h3>9.1 Generative forward path</h3>
+      <p>
+        Draw noise $\eta \sim \mathcal{N}(0,I)$ in image space (real/imag, 2 channels). Build a
+        4-channel generator input that mixes the zero-filled image with a null-space perturbation:
+      </p>
+      $$
+        x_{\mathrm{in}}
+        =
+        \mathrm{concat}\Big(
+          x_{\mathrm{us}},\;
+          x_{\mathrm{us}} + (I - A^H A)\,\eta
+        \Big).
+      $$
+      <p>
+        The backbone $G_\theta$ (originally GenRAM-style UNet; currently <strong>DitGen / LightningDiT-B</strong>)
+        outputs a 2-channel field. Reconstruction assembles
+      </p>
+      $$
+        \hat x
+        =
+        x_{\mathrm{us}} + (I - A^H A)\, G_\theta(x_{\mathrm{in}}).
+      $$
+      <p>
+        Drift is applied in residual / null space: compare
+        $(I-A^H A)G_\theta(x_{\mathrm{in}})$ to $(I-A^H A)x_{\mathrm{fs}}$
+        (with optional multiscale DWT drift and patchwise drift in <span class="mono">losses.py</span>).
+      </p>
+
+      <pre><code>noise ~ N(0, I)
+x_in = cat(x_us, x_us + (I - AᴴA) · noise)   # 4 channels
+model_out = DitGen(x_in)                      # 2 channels
+x_recon = x_us + (I - AᴴA) · model_out
+loss = drift( (I-AᴴA) model_out , (I-AᴴA) x_fs )
+     + optional L1/MSE(x_recon, x_fs)</code></pre>
+
+      <h3>9.2 Multiscale drift (DWT)</h3>
+      <p>
+        To match residuals across frequency bands, DriftRAM can decompose generated and target
+        residual maps with a multilevel discrete wavelet transform and average drift losses over
+        matching subbands (and optionally over spatial patches within each subband). This emphasizes
+        structural agreement from coarse anatomy to fine texture — closer in spirit to how diffusion
+        allocates capacity across scales.
+      </p>
+
+      <h3>9.3 Data &amp; physics</h3>
+      <p>
+        Training uses M4Raw paired slices with ESPIRiT coil maps, undersampling masks, and batched
+        <span class="mono">MultiCoilMRI</span> physics. Tensors are stored as real/imag stacks
+        $(B,2,H,W)$ for images and $(B,2,N,H,W)$ for multi-coil $k$-space measurements.
+      </p>
+    </section>
+
+    <section id="combine">
+      <h2>10. Combining unrolled networks with the drift paradigm</h2>
+      <p>
+        The current research frontier in this project is to stop treating “unrolled” and “generative drift”
+        as alternatives, and instead compose them.
+      </p>
+
+      <h3>10.1 Why combine?</h3>
+      <ul>
+        <li><strong>From MoDL/RAM:</strong> iterative or Krylov data-consistency is the most reliable way
+            to stay faithful to $y$ under model mismatch (mask changes, coil errors, noise level shifts).</li>
+        <li><strong>From DriftRAM:</strong> distributional residual matching is the most promising path to
+            DDPM-like texture at one (or few) NFEs without adversarial training instability.</li>
+      </ul>
+
+      <h3>10.2 Design sketches under consideration</h3>
+      <ol>
+        <li>
+          <strong>Drift-trained denoiser inside MoDL cascades.</strong>
+          Replace $\ell_2$-trained $\mathcal{D}_\theta$ with a drift-trained residual generator,
+          keep CG DC blocks. Inference remains $K$ cascades but with generative denoisers.
+        </li>
+        <li>
+          <strong>RAM / KSM features as the drift backbone.</strong>
+          Use physics-conditioned RAM blocks to predict null-space residuals, trained with
+          <span class="mono">drifting_objective</span> instead of (or in addition to) pixel losses.
+        </li>
+        <li>
+          <strong>Outer drift, inner DC projection.</strong>
+          One generative drift step followed by a learned / fixed number of MoDL-style CG projections —
+          hybrid few-step sampler.
+        </li>
+        <li>
+          <strong>Unrolled consistency distillation.</strong>
+          Use a slow DDPM teacher and a drift+DC student, so the student matches teacher marginals
+          while satisfying $Ax \approx y$.
+        </li>
+      </ol>
+
+      <div class="callout next">
+        <p>
+          <strong>Status.</strong>
+          Baselines (DDPM, rGAN), unrolled references (RAM, MoDL), and DriftRAM (DitGen + residual drift)
+          are in place under <span class="mono">Models/</span>. Integrating unrolled DC modules into the
+          drift training loop — sharing coil maps / masks / null-space utilities across codebases —
+          is the active next step toward the end goal: <em>single-step (or few-step) inference with
+          generative fidelity comparable to diffusion</em>.
+        </p>
+      </div>
+
+      <h3>10.3 Evaluation criteria going forward</h3>
+      <ul>
+        <li>Distortion: PSNR / SSIM vs. fully sampled references.</li>
+        <li>Perception / distribution: LPIPS, FID-like metrics on magnitude images, radiologist preference.</li>
+        <li>Physics: $k$-space data-consistency error on acquired locations $\|M(\mathcal{F}(\hat x) - y)\|$.</li>
+        <li>Compute: NFE, wall-clock per slice, memory at train and test time.</li>
+      </ul>
+    </section>
+
+    <section id="dirs">
+      <h2>11. Directory map of the codebase</h2>
+      <p>
+        How the directories were used along the research narrative:
+      </p>
+      <div class="dir-map">
+Models/<br />
+├── DDPM_xstart_multicoil/&nbsp;&nbsp;<span class="c"># diffusion baseline (x0-pred., multicoil)</span><br />
+├── rGAN/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="c"># adversarial / pix2pix residual GAN baseline</span><br />
+├── ram/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="c"># Reconstruct Anything Model (physics-aware)</span><br />
+├── MoDL_PyTorch/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="c"># unrolled CNN + CG data consistency</span><br />
+├── RDDM/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="c"># residual-driven drifting (LDCT reference impl.)</span><br />
+├── drift_ram/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="c"># MRI DriftRAM: DitGen + null-space drift loss</span><br />
+└── LORAKS/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="c"># classical structured low-rank reference</span><br /><br />
+m4_cm/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="c"># M4Raw DDPM train / infer / viz utilities</span><br />
+drifting/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="c"># upstream drifting / DiT ideas ported into DriftRAM</span>
+      </div>
+    </section>
+
+    <section id="outlook">
+      <h2>12. Outlook</h2>
+      <p>
+        Accelerated MRI sits at the intersection of linear inverse problems and high-dimensional
+        generative modeling. This research path deliberately measured three corners of the design space —
+        slow high-fidelity diffusion, fast adversarial generation, and fast physics unrolling —
+        before committing to residual drifting as the mechanism for one-step generative reconstruction.
+      </p>
+      <p>
+        The remaining bet is compositional: <strong>keep MoDL/RAM-style data consistency, train the
+        prior / residual module with drift</strong>, and push NFE toward one without surrendering the
+        textural realism that made DDPM worth training in the first place.
+      </p>
+    </section>
+
+    <section id="refs">
+      <h2>13. Selected references</h2>
+      <ul>
+        <li>Ho et al., “Denoising Diffusion Probabilistic Models,” NeurIPS 2020.</li>
+        <li>Isola et al., “Image-to-Image Translation with Conditional Adversarial Networks,” CVPR 2017 (pix2pix).</li>
+        <li>Aggarwal, Mani, Jacob, “MoDL: Model-Based Deep Learning Architecture for Inverse Problems,” IEEE TMI 2019.</li>
+        <li>Terris, Hurault, Song, Tachella, “Reconstruct Anything Model,” arXiv:2503.08915, 2025.</li>
+        <li>Wang, Lyu, Wang, “RDDM: A Residual-Driven Drifting Model for High-Fidelity Low-Dose CT Denoising,” arXiv:2605.17188, 2026.</li>
+        <li>Pezzotti et al. / FastMRI challenge papers; Lyu et al. M4Raw dataset for low-field MRI.</li>
+        <li>Chung et al., diffusion posterior sampling / score-based inverse problem solvers (related posterior sampling literature).</li>
+      </ul>
+    </section>
+
+    <footer>
+      <div style="display: flex; justify-content: center; gap: 1.5rem; margin-bottom: 0.75rem; flex-wrap: wrap;">
+        <a href="https://github.com/tuna-alatan" target="_blank" rel="noopener noreferrer" style="color: #555; font-size: 0.9rem;">GitHub</a>
+        <a href="https://www.youtube.com/@tunaalatan35" target="_blank" rel="noopener noreferrer" style="color: #555; font-size: 0.9rem;">YouTube</a>
+        <a href="https://www.linkedin.com/in/tuna-alatan/" target="_blank" rel="noopener noreferrer" style="color: #555; font-size: 0.9rem;">LinkedIn</a>
+        <a href="mailto:tuna.alatan@gmail.com" style="color: #555; font-size: 0.9rem;">Email</a>
+      </div>
+      <p style="font-size: 0.85rem; color: #999; margin: 0;">&copy; 2026 M. Tuna Alatan</p>
+    </footer>
+  </div>
+
+  <script>
+    document.querySelector('nav.toc').addEventListener('click', function() {
+      this.classList.toggle('toc-open');
+    });
+  </script>
+</body>
+</html>

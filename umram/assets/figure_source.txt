@@ -1,0 +1,5 @@
+M4Raw real data figures (coil RSS for display)
+contrast=T2
+slice_idx=153 slice=2022061206_T203.h5:slice9
+R=4.0 mask_density=0.2500
+kspace_shape=(1620, 4, 256, 256)

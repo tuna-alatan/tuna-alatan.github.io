@@ -1,73 +1,131 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tuna Alatan</title>
-    <!-- Google Fonts: Fira Mono -->
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Mono&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
-    <!-- Favicon -->
-    <link rel="icon" href="favicon.svg">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>M. Tuna Alatan — Computer Vision &amp; Computational Imaging</title>
+  <meta name="description" content="M. Tuna Alatan is an undergraduate researcher at Bilkent University working on computer vision, generative models, and inverse problems in computational imaging.">
+
+  <link rel="stylesheet" href="assets/style.css">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="canonical" href="https://tuna-alatan.github.io">
+
+  <meta property="og:title" content="M. Tuna Alatan — Undergraduate Researcher">
+  <meta property="og:description" content="Research in computer vision, generative modeling, and inverse problems in computational imaging.">
+  <meta property="og:image" content="https://tuna-alatan.github.io/profile.jpg">
+  <meta property="og:url" content="https://tuna-alatan.github.io">
+  <meta property="og:type" content="website">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "M. Tuna Alatan",
+    "affiliation": { "@type": "Organization", "name": "Bilkent University" },
+    "jobTitle": "Undergraduate Researcher",
+    "url": "https://tuna-alatan.github.io",
+    "sameAs": [
+      "https://github.com/tuna-alatan",
+      "https://www.linkedin.com/in/tuna-alatan/",
+      "https://www.youtube.com/@tunaalatan35"
+    ]
+  }
+  </script>
 </head>
-
 <body>
-    <img src="profile.jpg" alt="Profile Picture" class="profile-pic">
-    
-    <h1 id="about-me">About Me</h1>
-    <p>I’m currently studying Electrical and Electronics Engineering at Bilkent University. I graduated from METU Foundation School High School at Ankara. My passion for programming started during high school (10th grade) and even since I am learning new languages and tools. In addition to programming, 3D modeling and rendering is a huge ambition of mine. My journey with 3D modeling has started even earlier than programming and I post some of my work on <a href="https://github.com/tuna-alatan">Behance</a>. As hobby I love doing origami and playing basketball.</p>
+  <nav class="site-nav" aria-label="Primary navigation">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo" aria-label="M. Tuna Alatan, home">MTA<span class="logo-mark">.</span></a>
+      <div class="nav-links">
+        <a href="#about" class="nav-link">About</a>
+        <a href="#research" class="nav-link">Research</a>
+        <a href="blog.html" class="nav-link">Notes</a>
+        <a href="resume.pdf" class="nav-link nav-cv" target="_blank" rel="noopener noreferrer">CV <span aria-hidden="true">↗</span></a>
+      </div>
+    </div>
+  </nav>
 
-    <h1 id="socials" class="scroll-text text-hidden">Socials</h1>
-    <ul>
-        <li class="scroll-text text-hidden">GitHub 🔗 <a href="https://github.com/tuna-alatan">tuna-alatan</a></li>
-        <li class="scroll-text text-hidden">Behance 🔗 <a href="https://www.behance.net/tunaalatan">tunaalatan</a></li>
-        <li class="scroll-text text-hidden">YouTube 🔗 <a href="https://www.youtube.com/@tunaalatan35">Tuna Alatan</a></li>
-        <li class="scroll-text text-hidden">LinkedIn 🔗 <a href="https://www.linkedin.com/in/tuna-alatan/">Tuna Alatan</a></li>
-        <li class="scroll-text text-hidden">Mail 🔗 tuna.alatan@gmail.com</li>
-    </ul>
+  <main>
+    <section class="profile-intro" id="about">
+      <div class="page-shell intro-grid">
+        <div class="intro-copy">
+          <p class="eyebrow">Electrical &amp; Electronics Engineering · Bilkent University</p>
+          <h1>M. Tuna Alatan</h1>
+          <div class="intro-bio">
+            <p>I am a senior undergraduate researcher at Bilkent University, working at the intersection of <strong>computer vision</strong>, <strong>generative modeling</strong>, and <strong>medical image reconstruction</strong>.</p>
+            <p>I study how generative models can solve inverse problems in computational imaging. My current work explores fast, physics-aware generative methods for accelerated multicoil MRI under the supervision of Prof. Tolga Çukur.</p>
+          </div>
+          <div class="profile-links" aria-label="Profile links">
+            <a href="mailto:tuna.alatan@gmail.com">Email <span aria-hidden="true">↗</span></a>
+            <a href="https://github.com/tuna-alatan" target="_blank" rel="noopener noreferrer">GitHub <span aria-hidden="true">↗</span></a>
+            <a href="https://www.linkedin.com/in/tuna-alatan/" target="_blank" rel="noopener noreferrer">LinkedIn <span aria-hidden="true">↗</span></a>
+            <a href="resume.pdf" target="_blank" rel="noopener noreferrer">Curriculum vitae <span aria-hidden="true">↗</span></a>
+          </div>
+        </div>
 
-    <h1 id="projects" class="scroll-text text-hidden">Projects</h1>
-    <ul>
-        <li class="scroll-text text-hidden"><a href="https://github.com/tuna-alatan/Color-Tracking-Camera">Color Tracking Camera Using VHDL - My final project of the course EE 102 @ Bilkent University</a></li>
-        <li class="scroll-text text-hidden">Ray Tracing engine using C++ - A personal on-going project to better understand rendering engines.</li>
-    </ul>
+        <aside class="portrait-wrap">
+          <img src="profile.jpg" alt="Portrait of M. Tuna Alatan" class="portrait" width="1792" height="2104">
+          <div class="availability"><span class="status-dot" aria-hidden="true"></span>Based in Ankara, Türkiye</div>
+        </aside>
+      </div>
+    </section>
 
+    <section class="content-section" id="research">
+      <div class="page-shell">
+        <div class="section-heading">
+          <div>
+            <p class="section-kicker">01 / Selected research</p>
+            <h2>Current work</h2>
+          </div>
+          <a href="blog.html" class="quiet-link">All projects <span aria-hidden="true">→</span></a>
+        </div>
+
+        <article class="featured-project">
+          <a href="umram/" class="project-visual" aria-label="Read Generative Models for Accelerated MRI Reconstruction">
+            <img src="umram/assets/mri_overview.png" alt="Accelerated MRI reconstruction comparison" loading="lazy">
+          </a>
+          <div class="project-copy">
+            <div class="project-meta">
+              <span>Ongoing research</span>
+              <span>2026</span>
+            </div>
+            <h3><a href="umram/">Generative Models for Accelerated MRI Reconstruction</a></h3>
+            <p>A research path from diffusion and adversarial baselines to physics-based unrolled networks and residual-space drifting models—with the goal of single-step inference and generative-quality reconstruction.</p>
+            <p class="project-context">Supervised by Prof. Tolga Çukur · Bilkent University EE</p>
+            <a href="umram/" class="project-link">Read the research notes <span aria-hidden="true">→</span></a>
+          </div>
+        </article>
+
+        <div class="project-list" aria-label="Additional projects">
+          <article class="project-row">
+            <div class="project-year">2024</div>
+            <div>
+              <h3>Color Tracking Camera Using VHDL</h3>
+              <p>Real-time color detection and servo control on an FPGA, using a camera pipeline and HSV-space tracking.</p>
+            </div>
+            <div class="project-type">FPGA · Vision</div>
+          </article>
+          <article class="project-row">
+            <div class="project-year">Ongoing</div>
+            <div>
+              <h3>Physically Based Ray Tracer</h3>
+              <p>A C++ renderer exploring Monte Carlo path tracing, BVH acceleration, PBR materials, and HDR lighting.</p>
+            </div>
+            <div class="project-type">C++ · Graphics</div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="page-shell footer-inner">
+      <p>© <span data-current-year>2026</span> M. Tuna Alatan</p>
+      <p>Built for the open web.</p>
+    </div>
+  </footer>
+
+  <script src="assets/main.js"></script>
 </body>
-
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const elements = document.querySelectorAll('.scroll-text');
-        let lastScrollTop = 0; // Track the last scroll position
-
-        function checkScroll() {
-            const triggerPoint = window.innerHeight * 0.9; // Trigger when element is 90% down the viewport
-            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-
-            elements.forEach(el => {
-                const rect = el.getBoundingClientRect();
-
-                if (rect.top < triggerPoint) {
-                    if (scrollTop > lastScrollTop) {
-                        // Scrolling down: swipe in from the left
-                        el.classList.add('text-visible');
-                        el.classList.remove('text-hidden', 'text-hidden-up');
-                    }
-                } else {
-                    if (scrollTop < lastScrollTop) {
-                        // Scrolling up: swipe out to the left
-                        el.classList.add('text-hidden-up');
-                        el.classList.remove('text-visible');
-                    }
-                }
-            });
-
-            lastScrollTop = scrollTop <= 0 ? 0 : scrollTop; // Ensure lastScrollTop doesn't go negative
-        }
-
-        window.addEventListener('scroll', checkScroll);
-        checkScroll(); // Initial check when page loads
-    });
-</script>
-
-
 </html>
