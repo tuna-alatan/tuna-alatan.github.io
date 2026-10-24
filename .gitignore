@@ -1,0 +1,9 @@
+/.quarto/
+/_freeze/
+/_site/
+
+
+**/*.quarto_ipynb
+
+# Unpublished until the preprint is out
+/umram/index.qmd

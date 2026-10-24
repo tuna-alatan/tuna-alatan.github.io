@@ -1,0 +1,14 @@
+---
+pagetitle: "Research Notes — M. Tuna Alatan"
+description: "Research projects and technical notes by M. Tuna Alatan on computer vision, generative models, and inverse problems."
+body-classes: notes-page
+toc: false
+---
+
+# Projects & notes {.notes-title}
+
+[Selected work in computational imaging, generative modeling, and hardware design.]{.notes-intro}
+
+::: {.entries}
+- [2024]{.when} [**Color Tracking Camera in VHDL** (EE 102). Real-time FPGA system that captures camera input, finds a target color in HSV space, and drives a servo-mounted camera. [VHDL · FPGA · computer vision]{.tags}]{.what}
+:::
