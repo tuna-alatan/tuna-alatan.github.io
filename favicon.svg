@@ -2,9 +2,9 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
-   width="65.812256mm"
-   height="99.980736mm"
-   viewBox="0 0 65.812256 99.980736"
+   width="120"
+   height="120"
+   viewBox="-27.094 -10 120 120"
    version="1.1"
    id="svg5"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
@@ -24,6 +24,12 @@
      showgrid="false" />
   <defs
      id="defs2" />
+  <circle
+     cx="32.906"
+     cy="50"
+     r="60"
+     fill="#ffffff"
+     id="background" />
   <g
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"

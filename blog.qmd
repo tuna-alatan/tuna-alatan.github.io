@@ -1,5 +1,5 @@
 ---
-pagetitle: "Research Notes — M. Tuna Alatan"
+pagetitle: "Notes"
 description: "Research projects and technical notes by M. Tuna Alatan on computer vision, generative models, and inverse problems."
 body-classes: notes-page
 toc: false

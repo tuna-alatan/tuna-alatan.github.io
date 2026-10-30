@@ -11,6 +11,10 @@ project:
     - assets/portrait.jpg
     - resume.pdf
     - favicon.svg
+    - favicon.ico
+    - favicon-48.png
+    - favicon-192.png
+    - apple-touch-icon.png
     - robots.txt
     - googleaa4258336ce3cf36.html
 
@@ -55,6 +59,7 @@ format:
     anchor-sections: true
     link-external-newwindow: true
     code-copy: true
+    include-in-header: _includes/icons.html
     include-after-body: _includes/site-script.html
 
 execute:

@@ -1,5 +1,5 @@
 ---
-pagetitle: "M. Tuna Alatan — Computer Vision & Computational Imaging"
+pagetitle: "M. Tuna Alatan"
 description: "M. Tuna Alatan is an undergraduate researcher at Bilkent University working on computer vision, generative models, and inverse problems in computational imaging."
 body-classes: home-page
 toc: false
