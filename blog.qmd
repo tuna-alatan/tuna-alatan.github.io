@@ -10,5 +10,6 @@ toc: false
 [Selected work in computational imaging, generative modeling, and hardware design.]{.notes-intro}
 
 ::: {.entries}
+- [2026]{.when} [**[DriftRecon: One-Step Medical Image Reconstruction with Nullspace Drifting](driftrecon/index.qmd).** Guidance-coupled nullspace drifting for single-pass, measurement-consistent generative reconstruction in sparse-view CT and accelerated MRI. [Paper](https://arxiv.org/abs/2610.38953). [CT · MRI · generative models · inverse problems]{.tags}]{.what}
 - [2024]{.when} [**Color Tracking Camera in VHDL** (EE 102). Real-time FPGA system that captures camera input, finds a target color in HSV space, and drives a servo-mounted camera. [VHDL · FPGA · computer vision]{.tags}]{.what}
 :::

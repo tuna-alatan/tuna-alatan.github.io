@@ -4,6 +4,7 @@ project:
   render:
     - index.qmd
     - blog.qmd
+    - driftrecon/index.qmd
     # umram/index.qmd is hidden until the preprint is out
   resources:
     - profile.png

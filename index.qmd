@@ -24,6 +24,26 @@ include-in-header: _includes/person-schema.html
 I am a senior undergraduate at Bilkent University working on **computer vision**, **generative modeling**, and **medical image reconstruction**. I study how generative models can solve inverse problems in computational imaging; currently, fast physics-aware generative methods for accelerated multicoil MRI, supervised by Prof. Tolga Çukur.
 :::
 
+## Publications {#publications}
+
+::::: {.pub}
+[![](driftrecon/assets/thumb.png){fig-alt="DriftRecon MRI reconstruction next to the fully sampled reference"}](driftrecon/index.qmd)
+
+:::: {.pub-body}
+[[Guidance-Coupled Nullspace Drifting for One-Step Medical Image Reconstruction](driftrecon/index.qmd)]{.pub-title}
+
+**M. Tuna Alatan**, Agah Server Tapan, Şaban Öztürk, Muhammad Usama Mirza, Bilal Kabas, Ge Wang, Tolga Çukur
+
+[arXiv preprint, 2026]{.meta}
+
+DriftRecon: a one-step generative reconstructor for sparse-view CT and accelerated MRI that drifts only in the nullspace of the imaging operator, staying exactly measurement-consistent.
+
+::: {.links}
+[Paper](https://arxiv.org/abs/2610.38953)[Blog post](driftrecon/index.qmd)
+:::
+::::
+:::::
+
 ## Projects {#projects}
 
 ::: {.entries}
