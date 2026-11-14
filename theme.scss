@@ -67,13 +67,13 @@ a:hover {
 .navbar-title {
   color: var(--ink) !important;
   font-family: var(--sans);
-  font-size: 0.96rem;
+  font-size: 1.02rem;
   font-weight: 600;
 }
 
 .navbar-nav .nav-link {
   font-family: var(--sans);
-  font-size: 0.88rem;
+  font-size: 0.93rem;
 }
 
 .navbar-nav .nav-link.active {
@@ -86,7 +86,7 @@ a:hover {
   padding: 1.25rem 1rem 2rem;
   border-top: 1px solid var(--line);
   font-family: var(--sans);
-  font-size: 0.8rem;
+  font-size: 0.85rem;
 }
 
 .nav-footer a {
@@ -124,7 +124,7 @@ a:hover {
   color: var(--muted);
   border-bottom: 1px solid var(--line);
   font-family: var(--sans);
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -166,7 +166,7 @@ h1.home-title {
 .links {
   margin: 0;
   font-family: var(--sans);
-  font-size: 0.88rem;
+  font-size: 0.93rem;
 }
 
 .links a + a::before {
@@ -216,7 +216,7 @@ h1.home-title {
 .meta {
   color: var(--faint);
   font-family: var(--sans);
-  font-size: 0.8rem;
+  font-size: 0.85rem;
 }
 
 /* Compact dated list (home projects, notes page) */
@@ -243,7 +243,7 @@ h1.home-title {
   padding-top: 0.2rem;
   color: var(--faint);
   font-family: var(--sans);
-  font-size: 0.8rem;
+  font-size: 0.85rem;
 }
 
 .entries .what {
@@ -255,7 +255,7 @@ h1.home-title {
   margin-top: 0.1rem;
   color: var(--faint);
   font-family: var(--sans);
-  font-size: 0.77rem;
+  font-size: 0.82rem;
 }
 
 /* Notes page */
@@ -282,14 +282,14 @@ h1.home-title {
   margin-bottom: 0.75rem;
   color: var(--muted) !important;
   font-family: var(--sans);
-  font-size: 0.83rem;
+  font-size: 0.88rem;
 }
 
 .article-meta-strip {
   margin-bottom: 2rem;
   color: var(--muted);
   font-family: var(--sans);
-  font-size: 0.86rem;
+  font-size: 0.91rem;
 }
 
 .research-page .navbar .navbar-container {
@@ -319,7 +319,7 @@ h1.home-title {
 
 .research-page .quarto-title-meta {
   font-family: var(--sans);
-  font-size: 0.83rem;
+  font-size: 0.88rem;
 }
 
 .research-page #quarto-document-content h2 {
@@ -342,7 +342,7 @@ h1.home-title {
 .research-page .figure-caption {
   color: var(--muted);
   font-family: var(--sans);
-  font-size: 0.81rem;
+  font-size: 0.86rem;
   line-height: 1.5;
 }
 
@@ -366,7 +366,7 @@ h1.home-title {
 
 .research-page table {
   font-family: var(--sans);
-  font-size: 0.86rem;
+  font-size: 0.91rem;
 }
 
 .research-page code,
@@ -382,7 +382,7 @@ h1.home-title {
 
 .research-page #TOC {
   font-family: var(--sans);
-  font-size: 0.8rem;
+  font-size: 0.85rem;
 }
 
 @media (max-width: 575px) {
